@@ -6,13 +6,20 @@ import plotly.express as px
 
 # Titre de l'application
 st.title("Le Dataset du FOOTIX")
+@st.cache_data
+def load_data():
 
-top = pd.read_csv("SHN_2015.csv")
+    top = pd.read_excel("https://static.data.gouv.fr/resources/athletes-inscrits-sur-la-liste-des-sportifs-de-haut-niveau-en-2015/20160915-174345/SHN_2015.xlsx")
+
+    return top
+
+top= load_data()
 
 top['DepLib'] = top['DepLib'].str.replace('-', ' ')
 
 # Créez une liste des valeurs à supprimer
-valeurs_a_supprimer = ['NOUVELLE CALEDONIE', 'ETRANGER', 'MONACO','MAYOTTE','NOUMEA','HAUTE CORSE', 'ST PIERRE ET MIQUELON','CORSE', 'REUNION','LA REUNION' 'CORSE DU SUD']
+valeurs_a_supprimer = ['NOUVELLE CALEDONIE', 'ETRANGER', 'MONACO', 'MAYOTTE', 'NOUMEA', 'HAUTE CORSE',
+                       'ST PIERRE ET MIQUELON', 'CORSE', 'REUNION', 'LA REUNION' 'CORSE DU SUD']
 
 # Supprimez les lignes correspondantes dans le DataFrame top
 top = top[~top['DepLib'].isin(valeurs_a_supprimer)]
@@ -22,7 +29,7 @@ top = top.reset_index(drop=True)
 
 dataframe = pd.read_csv("cities.csv")
 
-df = dataframe[["latitude","longitude","department_name"]]
+df = dataframe[["latitude", "longitude", "department_name"]]
 
 df['department_name'] = df['department_name'].str.upper()
 
@@ -31,11 +38,14 @@ df['department_name'] = df['department_name'].str.replace('-', ' ')
 # Grouper par le département et calculer la moyenne de latitude et longitude
 resultat = df.groupby('department_name')[['latitude', 'longitude']].mean().reset_index()
 
-
 resultat = resultat.rename(columns={'department_name': 'DepLib'})
 
-
 Footix = top.merge(resultat, on='DepLib', how='inner')
+
+Footix=load_data()
+
+if st.checkbox("Afficher les données"):
+    st.write(Footix)
 
 #st.write(Footix)
 
@@ -103,7 +113,6 @@ result = Footix.groupby(['Catlib', 'DepLib'])['DepLib'].count().reset_index(name
 result = result.merge(resultat, on='DepLib', how='inner')
 result['Coord'] = list(zip(result['longitude'], result['latitude']))
 
-
 #st.write(result)
 
 
@@ -113,6 +122,7 @@ st.title('Informations sur les Départements')
 s5 = st.selectbox("Sélectionnez une catégorie", result['Catlib'].unique())
 
 # Filtrer les données en fonction de la catégorie sélectionnée
+
 filter_data = result[result['Catlib'] == s5]
 
 

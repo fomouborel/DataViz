@@ -1,9 +1,9 @@
 import pydeck as pdk
-import plost
+#import plost
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import matplotlib.pyplot as plt
 # Titre de l'application
 st.title("Le Dataset du FOOTIX")
 
@@ -56,13 +56,23 @@ st.bar_chart(occurrences, color='#7f00ff')
 df = Footix.groupby('Catlib').size().reset_index(name='Occurrence')
 
 st.markdown('### Donut chart')
-plost.donut_chart(
-        data=df,
-        theta='Occurrence',
-        color='Catlib',
-        legend='Catlib',
-        use_container_width=True)
+###plost.donut_chart(
+#        data=df,
+#        theta='Occurrence',
+#        color='Catlib',
+#        legend='Catlib',
+#        use_container_width=True)
 
+# Créer un graphique en forme de donut
+fig, ax = plt.subplots()
+ax.pie(df['Occurrence'], labels=df['Catlib'], autopct='%1.1f%%', startangle=90, wedgeprops=dict(width=0.4))
+
+# Dessiner un cercle au milieu pour le transformer en donut
+centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+fig.gca().add_artist(centre_circle)
+
+# Afficher le graphique
+st.pyplot(fig)
 
 
 st.title("Les Clubs de Sport les Plus Populaires")

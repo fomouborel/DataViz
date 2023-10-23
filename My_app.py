@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 # Titre de l'application
-st.title("Le Dataset du SPORTIX")
+st.title("Le SPORTIX de France")
 @st.cache_data
 def load_data():
 

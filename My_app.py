@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 # Titre de l'application
-st.title("Le Dataset du FOOTIX")
+st.title("Le Dataset du SPORTIX")
 @st.cache_data
 def load_data():
 
@@ -49,7 +49,9 @@ if st.checkbox("Afficher les données"):
 
 #st.write(Footix)
 
-st.markdown('### Les classiques')
+st.title('Les classiques')
+
+st.markdown('### Distribution des sports en France')
 
 # Sélectionnez une variable pour l'axe x
 x_variable = st.selectbox("Axe x:",
@@ -66,6 +68,8 @@ st.bar_chart(occurrences, color='#7f00ff')
 df = Footix.groupby('Catlib').size().reset_index(name='Occurrence')
 
 st.markdown('### Donut chart')
+st.markdown('### La repartition des catégories de sport')
+
 plost.donut_chart(
         data=df,
         theta='Occurrence',
